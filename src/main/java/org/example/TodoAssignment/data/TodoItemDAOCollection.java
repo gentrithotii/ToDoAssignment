@@ -1,12 +1,15 @@
 package org.example.TodoAssignment.data;
 
 import org.example.TodoAssignment.data.interfaces.ITodoItemDAO;
+import org.example.TodoAssignment.models.Person;
 import org.example.TodoAssignment.models.TodoItem;
 import org.example.TodoAssignment.models.TodoItemTask;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TodoItemDAOCollection implements ITodoItemDAO {
     private final List<TodoItem> todoItemList;
@@ -20,9 +23,14 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
     }
 
     @Override
-    public TodoItem persist(TodoItem todoItem) {
+    public TodoItem create(TodoItem todoItem) {
         getTodoItemList().add(todoItem);
         return todoItem;
+    }
+
+    @Override
+    public List<TodoItem> findAll() {
+        return getTodoItemList();
     }
 
     @Override
@@ -36,12 +44,7 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
     }
 
     @Override
-    public List<TodoItem> findAll() {
-        return getTodoItemList();
-    }
-
-    @Override
-    public List<TodoItem> findAllByDoneStatus(boolean done) {
+    public List<TodoItem> findByDoneStatus(boolean done) {
         List<TodoItem> listByStatusDone = new ArrayList<>();
         for (TodoItem todoItem : getTodoItemList()) {
             if (todoItem.isDone() == done) {
@@ -52,18 +55,7 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
     }
 
     @Override
-    public List<TodoItem> findByTitleContains(String title) {
-        List<TodoItem> titleContains = new ArrayList<>();
-        for (TodoItem todoItem : getTodoItemList()) {
-            if (todoItem.getTitle().toLowerCase().contains(title.toLowerCase())) {
-                titleContains.add(todoItem);
-            }
-        }
-        return titleContains;
-    }
-
-    @Override
-    public List<TodoItem> findByPersonId(int personId) {
+    public List<TodoItem> findByAssignee(int personId) {
         List<TodoItem> todoItemsByPersonId = new ArrayList<>();
         for (TodoItem todoItem : getTodoItemList()) {
             if (todoItem.getCreator().getId() == personId) {
@@ -74,29 +66,35 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
     }
 
     @Override
-    public List<TodoItem> findByDeadlineBefore(LocalDate date) {
-        List<TodoItem> listByDeadlineBefore = new ArrayList<>();
+    public List<TodoItem> findByAssignee(Person person) {
+        List<TodoItem> todoItemsByPersonId = new ArrayList<>();
         for (TodoItem todoItem : getTodoItemList()) {
-            if (todoItem.getDeadLine().isBefore(date)) {
-                listByDeadlineBefore.add(todoItem);
+            if (todoItem.getCreator().getId() == person.getId()) {
+                todoItemsByPersonId.add(todoItem);
             }
         }
-        return listByDeadlineBefore;
+        return todoItemsByPersonId;
     }
 
     @Override
-    public List<TodoItem> findByDeadlineAfter(LocalDate date) {
-        List<TodoItem> listByDeadlineAfter = new ArrayList<>();
-        for (TodoItem todoItem : getTodoItemList()) {
-            if (todoItem.getDeadLine().isAfter(date)) {
-                listByDeadlineAfter.add(todoItem);
-            }
-        }
-        return listByDeadlineAfter;
+    public List<TodoItem> findByUnassignedTodoItems() {
+        return getTodoItemList().stream().filter((p) -> p.getCreator() == null || p.getCreator().equals(" ")).
+                collect(Collectors.toList());
     }
 
     @Override
-    public void remove(int id) {
+    public TodoItem update(TodoItem todoItem) {
+        for (int i = 0; i < getTodoItemList().size(); i++) {
+            if (getTodoItemList().get(i).getId() == todoItem.getId()) {
+                getTodoItemList().set(i, todoItem);
+                return todoItem;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteById(int id) {
         getTodoItemList().removeIf((todoItem) -> todoItem.getId() == id);
     }
 }

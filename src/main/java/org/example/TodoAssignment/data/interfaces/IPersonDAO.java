@@ -5,13 +5,15 @@ import org.example.TodoAssignment.models.Person;
 import java.util.List;
 
 public interface IPersonDAO {
-    Person persist(Person person);
-
-    Person findById(int id);
-
-    Person findByEmail(String email);
+    Person create(Person person);
 
     List<Person> findAll();
 
-    void remove(int id);
+    Person findById(int id);
+
+    List<Person> findByName(String name);
+
+    Person update(Person person);
+
+    void deleteById(int id);
 }

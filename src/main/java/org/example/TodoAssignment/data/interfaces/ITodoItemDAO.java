@@ -1,28 +1,29 @@
 package org.example.TodoAssignment.data.interfaces;
 
+import org.example.TodoAssignment.models.Person;
 import org.example.TodoAssignment.models.TodoItem;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface ITodoItemDAO {
-    TodoItem persist(TodoItem todoItem);
-
-    TodoItem findById(int id);
+    TodoItem create(TodoItem todoItem);
 
     List<TodoItem> findAll();
 
-    List<TodoItem> findAllByDoneStatus(boolean done);
+    TodoItem findById(int id);
 
-    List<TodoItem> findByTitleContains(String title);
+    List<TodoItem> findByDoneStatus(boolean done);
 
-    List<TodoItem> findByPersonId(int personId);
+    List<TodoItem> findByAssignee(int personId);
 
-    List<TodoItem> findByDeadlineBefore(LocalDate date);
+    List<TodoItem> findByAssignee(Person person);
 
-    List<TodoItem> findByDeadlineAfter(LocalDate date);
+    List<TodoItem> findByUnassignedTodoItems();
 
-    void remove(int id);
+    TodoItem update(TodoItem todoItem);
+
+    void deleteById(int id);
 
 
 }
