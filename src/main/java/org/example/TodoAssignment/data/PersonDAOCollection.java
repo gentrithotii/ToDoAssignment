@@ -31,8 +31,7 @@ public class PersonDAOCollection implements IPersonDAO {
         System.out.println(sql);
         try {
 
-            Connection con = DBConnection.getInstance().getConnection();
-            PreparedStatement st = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement st = DBConnection.getInstance().getConnection().prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             st.setString(1, person.getFirstName());
             st.setString(2, person.getLastName());
 
@@ -50,8 +49,7 @@ public class PersonDAOCollection implements IPersonDAO {
     public List<Person> findAll() {
         String query = "SELECT * FROM person";
         try {
-            Connection con = DBConnection.getInstance().getConnection();
-            Statement st = con.createStatement();
+            Statement st = DBConnection.getInstance().getConnection().createStatement();
             ResultSet rs = st.executeQuery(query);
 
             while (rs.next()) {
@@ -75,8 +73,7 @@ public class PersonDAOCollection implements IPersonDAO {
     public Person findById(int id) {
         String sql = "SELECT * FROM person p WHERE p.person_id =  " + id;
         try {
-            Connection cn = DBConnection.getInstance().getConnection();
-            Statement st = cn.createStatement();
+            Statement st = DBConnection.getInstance().getConnection().createStatement();
             ResultSet rs = st.executeQuery(sql);
 
             if (rs.next()) {
