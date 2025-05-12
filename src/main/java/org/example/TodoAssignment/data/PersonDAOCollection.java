@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PersonDAOCollection implements IPersonDAO {
-    List<Person> personList;
+   private final List<Person> personList;
 
     public PersonDAOCollection() {
         this.personList = new ArrayList<>();
