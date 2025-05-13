@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class TodoItem {
-    private final int id;
+    private int id;
     private String title;
     private String description;
     private LocalDate deadLine;
@@ -14,7 +14,6 @@ public class TodoItem {
     private Person creator;
 
     public TodoItem(String title, String description, LocalDate deadLine, boolean done) {
-        this.id = TodoItemIdSequencer.nextId();
         setTitle(title);
         setDescription(description);
         setDeadLine(deadLine);
@@ -24,6 +23,17 @@ public class TodoItem {
     public TodoItem(String title, String description, LocalDate deadLine, boolean done, Person creator) {
         this(title, description, deadLine, done);
         setCreator(creator);
+    }
+
+    public TodoItem(int id, String title, String description, LocalDate deadLine, boolean done, Person creator) {
+        this(title, description, deadLine, done);
+        this.id = id;
+        setCreator(creator);
+    }
+
+    public TodoItem(int id, String title, String description, LocalDate deadLine, boolean done) {
+        this(title, description, deadLine, done);
+        this.id = id;
     }
 
     public int getId() {
@@ -98,10 +108,12 @@ public class TodoItem {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Todo name: ").append(getTitle()).append("\n")
+        sb.append("Todo id: ").append(getId()).append("\n")
+                .append("Todo name: ").append(getTitle()).append("\n")
                 .append("Description: ").append(getDescription()).append("\n")
                 .append("The deadline: ").append(getDeadLine()).append("\n")
-                .append("Is done status: ").append(isDone());
+                .append("Is done status: ").append(isDone()).append("\n")
+                .append("Assigined to id: ").append(getCreator().getId()).append("\n");
 
         return sb.toString();
     }
