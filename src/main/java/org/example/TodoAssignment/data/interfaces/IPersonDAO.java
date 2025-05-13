@@ -15,5 +15,5 @@ public interface IPersonDAO {
 
     Person update(Person person);
 
-    void deleteById(int id);
+    boolean deleteById(int id);
 }

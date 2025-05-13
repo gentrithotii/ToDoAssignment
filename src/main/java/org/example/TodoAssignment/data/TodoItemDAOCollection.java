@@ -94,7 +94,7 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
     }
 
     @Override
-    public void deleteById(int id) {
-        getTodoItemList().removeIf((todoItem) -> todoItem.getId() == id);
+    public boolean deleteById(int id) {
+       return getTodoItemList().removeIf((todoItem) -> todoItem.getId() == id);
     }
 }

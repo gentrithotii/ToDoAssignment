@@ -11,14 +11,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class PersonDAOCollection implements IPersonDAO {
-    private final List<Person> personList;
+    private Connection connection;
 
-    public PersonDAOCollection() {
-        this.personList = new ArrayList<>();
+
+    public PersonDAOCollection(Connection connection) {
+        this.connection = connection;
     }
 
     private List<Person> getPersonList() {
-        return personList;
+        return findAll();
     }
 
     @Override
@@ -29,9 +30,10 @@ public class PersonDAOCollection implements IPersonDAO {
 
         String sql = "INSERT INTO person(first_name, last_name) VALUES(?, ?)";
         System.out.println(sql);
-        try {
+        try (
+                PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)
+        ) {
 
-            PreparedStatement st = DBConnection.getInstance().getConnection().prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             st.setString(1, person.getFirstName());
             st.setString(2, person.getLastName());
 
@@ -47,9 +49,10 @@ public class PersonDAOCollection implements IPersonDAO {
 
     @Override
     public List<Person> findAll() {
-        String query = "SELECT * FROM person";
+        List<Person> personList = new ArrayList<>();
+        String query = "SELECT person_id, first_name, last_name FROM person";
         try {
-            Statement st = DBConnection.getInstance().getConnection().createStatement();
+            Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(query);
 
             while (rs.next()) {
@@ -59,10 +62,10 @@ public class PersonDAOCollection implements IPersonDAO {
                 String lastName = rs.getString("last_name");
 
                 Person personToAdd = new Person(personId, firstName, lastName);
-                getPersonList().add(personToAdd);
+                personList.add(personToAdd);
 
             }
-            return getPersonList();
+            return personList;
         } catch (SQLException e) {
             System.err.println("Error connecting to SQL: " + e.getMessage());
             return Collections.emptyList();
@@ -72,10 +75,10 @@ public class PersonDAOCollection implements IPersonDAO {
     @Override
     public Person findById(int id) {
         String sql = "SELECT * FROM person p WHERE p.person_id =  " + id;
-        try {
-            Statement st = DBConnection.getInstance().getConnection().createStatement();
-            ResultSet rs = st.executeQuery(sql);
-
+        try (
+                Statement st = connection.createStatement();
+                ResultSet rs = st.executeQuery(sql);
+        ) {
             if (rs.next()) {
                 return new Person(rs.getInt("person_id"), rs.getString("first_name"), rs.getString("last_name"));
             }
@@ -98,9 +101,10 @@ public class PersonDAOCollection implements IPersonDAO {
         List<Person> byName = new ArrayList<>();
         String sql = "SELECT * FROM person p WHERE p.first_name LIKE '%" + name + "%';";
         System.out.println(sql);
-        try {
-            Statement st = DBConnection.getInstance().getConnection().createStatement();
-            ResultSet rs = st.executeQuery(sql);
+        try (
+                PreparedStatement st = connection.prepareStatement(sql);
+                ResultSet rs = st.executeQuery()
+        ) {
             while (rs.next()) {
                 byName.add(new Person(rs.getInt("person_id"), rs.getString("first_name"), rs.getString("last_name")));
             }
@@ -115,11 +119,43 @@ public class PersonDAOCollection implements IPersonDAO {
 
     @Override
     public Person update(Person person) {
+        String sql = "UPDATE person SET first_name = ? , last_name = ? WHERE person_id = ?";
+
+        System.out.println(sql);
+        try (
+                PreparedStatement pt = connection.prepareStatement(sql);
+        ) {
+            pt.setString(1, person.getFirstName());
+            pt.setString(2, person.getLastName());
+            pt.setInt(3, person.getId());
+
+            int rowInserted = pt.executeUpdate();
+            if (rowInserted > 0) {
+                System.out.println("Updated successfully.");
+                return person;
+            }
+
+
+        } catch (SQLException e) {
+            System.err.println("Connecting to DB Error: " + e.getMessage());
+        }
         return null;
     }
 
     @Override
-    public void deleteById(int id) {
-        getPersonList().removeIf((person) -> person.getId() == id);
+    public boolean deleteById(int id) {
+        String sql = "DELETE FROM person WHERE person_id = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setInt(1, id);
+            int rowDeleted = ps.executeUpdate();
+            if (rowDeleted > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error deleting the person " + e.getMessage());
+        }
+        return false;
     }
 }

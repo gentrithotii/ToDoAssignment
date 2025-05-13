@@ -23,7 +23,7 @@ public interface ITodoItemDAO {
 
     TodoItem update(TodoItem todoItem);
 
-    void deleteById(int id);
+    boolean deleteById(int id);
 
 
 }
