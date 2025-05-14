@@ -133,6 +133,9 @@ public class PersonDAOCollection implements IPersonDAO {
             if (rowInserted > 0) {
                 System.out.println("Updated successfully.");
                 return person;
+            } else {
+                System.out.println("No person found with ID: " + person.getId());
+                return null;
             }
 
 

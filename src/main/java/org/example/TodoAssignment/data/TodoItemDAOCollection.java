@@ -245,7 +245,7 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
                             rs.getInt("todo_id"),
                             rs.getString("title"),
                             rs.getString("description"),
-                            rs.getDate( "deadline").toLocalDate(),
+                            rs.getDate("deadline").toLocalDate(),
                             rs.getBoolean("done")));
                 }
             }
@@ -258,11 +258,52 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
 
     @Override
     public TodoItem update(TodoItem todoItem) {
+        String sql = "UPDATE todo_item" +
+                " SET title = ? , description = ?, deadline = ? , done = ? , assignee_id = ? " +
+                " WHERE todo_id = ? ";
+
+        System.out.println(sql);
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql);
+        ) {
+            ps.setLong(6, todoItem.getId());
+            ps.setString(1, todoItem.getTitle());
+            ps.setString(2, todoItem.getDescription());
+            ps.setDate(3, java.sql.Date.valueOf(todoItem.getDeadLine()));
+            ps.setBoolean(4, todoItem.isDone());
+            ps.setObject(5, todoItem.getCreator());
+
+
+            int rowInserted = ps.executeUpdate();
+            if (rowInserted > 0) {
+                System.out.println("Updated successfully.");
+                return todoItem;
+            } else {
+                System.out.println("No Todo Item found with ID: " + todoItem.getId());
+                return null;
+            }
+
+
+        } catch (SQLException e) {
+            System.err.println("Connecting to DB Error: " + e.getMessage());
+        }
         return null;
     }
 
     @Override
     public boolean deleteById(int id) {
-        return true;
+        String sql = "DELETE FROM todo_item WHERE todo_id = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setInt(1, id);
+            int rowDeleted = ps.executeUpdate();
+            if (rowDeleted > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error deleting Todo Item " + e.getMessage());
+        }
+        return false;
     }
 }
