@@ -22,42 +22,46 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
 
     @Override
     public TodoItem create(TodoItem todoItem) {
-        String sql = "INSERT INTO todo_item (title, description, deadline, done, assignee_id) Values (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO todo_item (title, description, deadline, done, assignee_id) VALUES (?, ?, ?, ?, ?)";
+
         try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, todoItem.getTitle());
             ps.setString(2, todoItem.getDescription());
             ps.setDate(3, java.sql.Date.valueOf(todoItem.getDeadLine()));
             ps.setBoolean(4, todoItem.isDone());
-            if ((Integer) todoItem.getCreator().getId() != null) {
+
+            if (todoItem.getCreator() == null || todoItem.getCreator().getId() == 0) {
+                ps.setNull(5, Types.INTEGER);
+            } else {
                 ps.setInt(5, todoItem.getCreator().getId());
             }
-//            ps.setInt(5, 0);
+
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
-                ResultSet key = ps.getGeneratedKeys();
-                while (key.next()) {
-                    int idKey = key.getInt(1);
-                    return new TodoItem(idKey, todoItem.getTitle(), todoItem.getDescription(), todoItem.getDeadLine(), todoItem.isDone());
+                try (ResultSet key = ps.getGeneratedKeys()) {
+                    if (key.next()) {
+                        int idKey = key.getInt(1);
+                        return new TodoItem(idKey, todoItem.getTitle(), todoItem.getDescription(), todoItem.getDeadLine(), todoItem.isDone(), todoItem.getCreator());
+                    }
                 }
             }
-
         } catch (SQLException e) {
-            System.err.println("Something went wrong with the connection" + e.getMessage());
+            System.err.println("Error connecting to SQL: " + e.getMessage());
+            e.getStackTrace();
         }
+
         return null;
     }
 
     @Override
     public List<TodoItem> findAll() {
         List<TodoItem> todoItemList = new ArrayList<>();
-        String query = "SELECT todo_id, title, description, deadline, done, p.person_id, p.first_name, p.last_name " +
-                "FROM todo_item ti " +
-                "LEFT JOIN person p ON ti.assignee_id = p.person_id; ";
-        try (Statement st = connection.createStatement();
-             ResultSet rs = st.executeQuery(query)
+        String query = "SELECT todo_id, title, description, deadline, done, p.person_id, p.first_name, p.last_name " + "FROM todo_item ti " + "LEFT JOIN person p ON ti.assignee_id = p.person_id; ";
+        try (
+                Statement st = connection.createStatement();
+                ResultSet rs = st.executeQuery(query)
         ) {
             while (rs.next()) {
-
                 int todoId = rs.getInt("todo_id");
                 String title = rs.getString("title");
                 String description = rs.getString("description");
@@ -71,8 +75,7 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
                 if (assigneeId == 0) {
                     todoItem = new TodoItem(todoId, title, description, deadline, status);
 
-                }
-                else {
+                } else {
                     todoItem = new TodoItem(todoId, title, description, deadline, status, new Person(assigneeId, personFirstName, personLastName));
                 }
                 todoItemList.add(todoItem);
@@ -87,7 +90,39 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
 
     @Override
     public TodoItem findById(int id) {
+        String sql = "SELECT ti.todo_id, ti.title, ti.description, ti.deadline, ti.done, ti.assignee_id, p.first_name, p.last_name " +
+                "FROM todo_item ti LEFT JOIN person p ON ti.assignee_id = p.person_id " +
+                "WHERE ti.todo_id = ?;";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql);
+        ) {
+            ps.setInt(1, id);
 
+            try(
+                    ResultSet rs =  ps.executeQuery()
+            ) {
+
+                if (rs.next()) {
+                    int todoId = rs.getInt("todo_id");
+                    String title = rs.getString("title");
+                    String description = rs.getString("description");
+                    boolean status = rs.getBoolean("done");
+                    LocalDate deadline = rs.getDate("deadline").toLocalDate();
+                    int assigneeId = rs.getInt("person_id");
+                    String personFirstName = rs.getString("first_name");
+                    String personLastName = rs.getString("last_name");
+
+                    if (assigneeId == 0)
+                        return new TodoItem(todoId, title, description, deadline, status);
+
+                    return new TodoItem(todoId, title, description, deadline, status, new Person(assigneeId, personFirstName, personLastName));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error " + e.getMessage());
+            e.getStackTrace();
+        }
         return null;
     }
 

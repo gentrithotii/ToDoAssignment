@@ -17,7 +17,7 @@ class TodoItemTest {
 
     @BeforeEach
     void setUp() {
-        todoItem = new TodoItem("Test Title", "Test Description", LocalDate.now().plusDays(1), false, new Person("John", "Doe", "john.doe@example.com"));
+        todoItem = new TodoItem("Test Title", "Test Description", LocalDate.now().plusDays(1), false, new Person("John", "Doe"));
     }
 
     @Test
@@ -129,7 +129,7 @@ class TodoItemTest {
     @Test
     @DisplayName("Test if overdue detection works")
     void isOverdue() {
-        TodoItem overdueItem = new TodoItem("Test", "Desc", LocalDate.now().minusDays(1), false, new Person("Jane", "Doe", "jane.doe@example.com"));
+        TodoItem overdueItem = new TodoItem("Test", "Desc", LocalDate.now().minusDays(1), false, new Person("Jane", "Doe"));
         Assertions.assertTrue(overdueItem.isOverdue());
     }
 
