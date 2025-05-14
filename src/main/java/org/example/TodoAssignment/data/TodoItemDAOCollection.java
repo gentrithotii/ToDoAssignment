@@ -90,32 +90,22 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
 
     @Override
     public TodoItem findById(int id) {
-        String sql = "SELECT ti.todo_id, ti.title, ti.description, ti.deadline, ti.done, ti.assignee_id, p.first_name, p.last_name " +
+        String sql = "SELECT ti.todo_id, ti.title, ti.description, ti.deadline, ti.done, ti.assignee_id, p.person_id, p.first_name, p.last_name " +
                 "FROM todo_item ti LEFT JOIN person p ON ti.assignee_id = p.person_id " +
-                "WHERE ti.todo_id = ?;";
+                "WHERE ti.todo_id = ? ";
         try (
                 PreparedStatement ps = connection.prepareStatement(sql);
         ) {
             ps.setInt(1, id);
-
-            try(
-                    ResultSet rs =  ps.executeQuery()
-            ) {
-
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    int todoId = rs.getInt("todo_id");
-                    String title = rs.getString("title");
-                    String description = rs.getString("description");
-                    boolean status = rs.getBoolean("done");
-                    LocalDate deadline = rs.getDate("deadline").toLocalDate();
-                    int assigneeId = rs.getInt("person_id");
-                    String personFirstName = rs.getString("first_name");
-                    String personLastName = rs.getString("last_name");
-
-                    if (assigneeId == 0)
-                        return new TodoItem(todoId, title, description, deadline, status);
-
-                    return new TodoItem(todoId, title, description, deadline, status, new Person(assigneeId, personFirstName, personLastName));
+                    return new TodoItem(
+                            rs.getInt("todo_id"), rs.getString("title"),
+                            rs.getString("description"), rs.getDate("deadline").toLocalDate(),
+                            rs.getBoolean("done"),
+                            new Person(
+                                    rs.getInt("person_id"),
+                                    rs.getString("first_name"), rs.getString("last_name")));
                 }
             }
 
