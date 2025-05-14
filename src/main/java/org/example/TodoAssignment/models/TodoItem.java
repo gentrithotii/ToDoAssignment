@@ -112,8 +112,12 @@ public class TodoItem {
                 .append("Todo name: ").append(getTitle()).append("\n")
                 .append("Description: ").append(getDescription()).append("\n")
                 .append("The deadline: ").append(getDeadLine()).append("\n")
-                .append("Is done status: ").append(isDone()).append("\n")
-                .append("Assigined to id: ").append(getCreator().getId()).append("\n");
+                .append("Is done status: ").append(isDone()).append("\n");
+        if (getCreator() == null || getCreator().getId() == 0) {
+            sb.append("No assigned to anyone").append("\n");
+        } else {
+            sb.append("Assigned to id: ").append(getCreator().getId()).append("\n");
+        }
 
         return sb.toString();
     }

@@ -10,6 +10,7 @@ import org.example.TodoAssignment.seeddata.SeedData;
 import org.example.TodoAssignment.utils.DBConnection;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 
 public class Main {
@@ -34,8 +35,8 @@ public class Main {
 //            Person p = new Person(16, "Testi", "Testson");
 //            System.out.println(personDAO.update(p));
 //            System.out.println(personDAO.deleteById(16));
-//            System.out.println(todoItemDAO.findAll());
-
+            System.out.println(todoItemDAO.findAll());
+//            System.out.println(todoItemDAO.create(new TodoItem("Gentriti", "me ba gentriti", LocalDate.now(), false)));
 
         } catch (SQLException e) {
             System.err.println("Could not connect to server" + e.getMessage());

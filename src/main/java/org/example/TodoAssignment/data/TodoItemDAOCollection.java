@@ -52,11 +52,10 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
         List<TodoItem> todoItemList = new ArrayList<>();
         String query = "SELECT todo_id, title, description, deadline, done, p.person_id, p.first_name, p.last_name " +
                 "FROM todo_item ti " +
-                "INNER JOIN person p ON ti.assignee_id = p.person_id; ";
-        try(Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(query)
+                "LEFT JOIN person p ON ti.assignee_id = p.person_id; ";
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(query)
         ) {
-
             while (rs.next()) {
 
                 int todoId = rs.getInt("todo_id");
@@ -68,8 +67,14 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
                 String personFirstName = rs.getString("first_name");
                 String personLastName = rs.getString("last_name");
 
+                TodoItem todoItem;
+                if (assigneeId == 0) {
+                    todoItem = new TodoItem(todoId, title, description, deadline, status);
 
-                TodoItem todoItem = new TodoItem(todoId, title, description, deadline, status, new Person(assigneeId, personFirstName, personLastName));
+                }
+                else {
+                    todoItem = new TodoItem(todoId, title, description, deadline, status, new Person(assigneeId, personFirstName, personLastName));
+                }
                 todoItemList.add(todoItem);
 
             }
