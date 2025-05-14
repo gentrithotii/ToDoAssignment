@@ -172,6 +172,7 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
         String sql = "SELECT ti.todo_id, ti.title, ti.description, ti.deadline, ti.done, ti.assignee_id, p.person_id, p.first_name, p.last_name " +
                 "FROM todo_item ti LEFT JOIN person p ON ti.assignee_id = p.person_id " +
                 "WHERE ti.assignee_id = ? ";
+
         try (
                 PreparedStatement ps = connection.prepareStatement(sql);
         ) {
@@ -197,12 +198,12 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
 
     @Override
     public List<TodoItem> findByAssignee(Person person) {
+        List<TodoItem> todoItemsByPerson = new ArrayList<>();
         String sql = "SELECT ti.todo_id, ti.title, ti.description, ti.deadline, ti.done, ti.assignee_id " +
                 "FROM todo_item ti " +
                 "LEFT JOIN person p ON ti.assignee_id = p.person_id " +
                 "WHERE ti.assignee_id = ? AND p.first_name = ? AND p.last_name = ? ";
 
-        List<TodoItem> todoItemsByPerson = new ArrayList<>();
         try (
                 PreparedStatement ps = connection.prepareStatement(sql);
         ) {
@@ -232,7 +233,26 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
     @Override
     public List<TodoItem> findByUnassignedTodoItems() {
         List<TodoItem> byUnassignedTodos = new ArrayList<>();
+        String sql = "SELECT ti.todo_id, ti.title, ti.description, ti.deadline, ti.done, ti.assignee_id " +
+                "FROM todo_item ti " +
+                "WHERE ti.assignee_id IS null;";
 
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    byUnassignedTodos.add(new TodoItem(
+                            rs.getInt("todo_id"),
+                            rs.getString("title"),
+                            rs.getString("description"),
+                            rs.getDate( "deadline").toLocalDate(),
+                            rs.getBoolean("done")));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error finding unassigned todos " + e.getMessage());
+        }
+        System.out.println(byUnassignedTodos.size());
         return byUnassignedTodos;
     }
 

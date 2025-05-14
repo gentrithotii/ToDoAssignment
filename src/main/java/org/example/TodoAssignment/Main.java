@@ -40,8 +40,8 @@ public class Main {
 //            System.out.println(todoItemDAO.findById(100));
 //            System.out.println(todoItemDAO.findByDoneStatus(true));
 //            System.out.println(todoItemDAO.findByAssignee(43));
-            System.out.println(todoItemDAO.findByAssignee(new Person(43, "Paula", "Lee")));
-
+//            System.out.println(todoItemDAO.findByAssignee(new Person(43, "Paula", "Lee")));
+            System.out.println(todoItemDAO.findByUnassignedTodoItems());
         } catch (SQLException e) {
             System.err.println("Could not connect to server" + e.getMessage());
         }
