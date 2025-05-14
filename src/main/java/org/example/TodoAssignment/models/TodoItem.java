@@ -108,7 +108,7 @@ public class TodoItem {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Todo id: ").append(getId()).append("\n")
+        sb.append("\n").append("--------------------------------").append("\n").append("Todo id: ").append(getId()).append("\n")
                 .append("Todo name: ").append(getTitle()).append("\n")
                 .append("Description: ").append(getDescription()).append("\n")
                 .append("The deadline: ").append(getDeadLine()).append("\n")

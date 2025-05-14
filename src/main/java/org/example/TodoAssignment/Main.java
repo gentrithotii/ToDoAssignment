@@ -37,7 +37,10 @@ public class Main {
 //            System.out.println(personDAO.deleteById(16));
 //            System.out.println(todoItemDAO.findAll());
 //            System.out.println(todoItemDAO.create(new TodoItem("Gentriti", "me ba gentriti", LocalDate.now(), false)));
-            System.out.println(todoItemDAO.findById(100));
+//            System.out.println(todoItemDAO.findById(100));
+//            System.out.println(todoItemDAO.findByDoneStatus(true));
+            System.out.println(todoItemDAO.findByAssignee(43));
+
         } catch (SQLException e) {
             System.err.println("Could not connect to server" + e.getMessage());
         }
