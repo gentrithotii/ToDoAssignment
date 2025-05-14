@@ -178,7 +178,7 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
             ps.setInt(1, personId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                     todoItemsByPersonId.add(new TodoItem(
+                    todoItemsByPersonId.add(new TodoItem(
                             rs.getInt("todo_id"), rs.getString("title"),
                             rs.getString("description"), rs.getDate("deadline").toLocalDate(),
                             rs.getBoolean("done"),
@@ -197,9 +197,36 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
 
     @Override
     public List<TodoItem> findByAssignee(Person person) {
-        List<TodoItem> todoItemsByPersonId = new ArrayList<>();
+        String sql = "SELECT ti.todo_id, ti.title, ti.description, ti.deadline, ti.done, ti.assignee_id " +
+                "FROM todo_item ti " +
+                "LEFT JOIN person p ON ti.assignee_id = p.person_id " +
+                "WHERE ti.assignee_id = ? AND p.first_name = ? AND p.last_name = ? ";
 
-        return todoItemsByPersonId;
+        List<TodoItem> todoItemsByPerson = new ArrayList<>();
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql);
+        ) {
+            ps.setInt(1, person.getId());
+            ps.setString(2, person.getFirstName());
+            ps.setString(3, person.getLastName());
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    todoItemsByPerson.add(new TodoItem(
+                                    rs.getInt("todo_id"), rs.getString("title"),
+                                    rs.getString("description"), rs.getDate("deadline").toLocalDate(),
+                                    rs.getBoolean("done"),
+                                    person
+                            )
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error finding by id assignee! " + e.getMessage());
+            e.getStackTrace();
+        }
+        return todoItemsByPerson;
     }
 
     @Override
