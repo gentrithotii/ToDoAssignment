@@ -4,7 +4,7 @@ import org.example.TodoAssignment.sequencers.PersonIdSequencer;
 
 import java.util.Objects;
 
-public class Person {
+public class Person{
     private int id;
     private String firstName;
     private String lastName;

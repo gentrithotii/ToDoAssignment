@@ -258,23 +258,29 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
 
     @Override
     public TodoItem update(TodoItem todoItem) {
-        String sql = "UPDATE todo_item" +
+
+        String sqlUpdate = "UPDATE todo_item" +
                 " SET title = ? , description = ?, deadline = ? , done = ? , assignee_id = ? " +
                 " WHERE todo_id = ? ";
 
-        System.out.println(sql);
+        String findPerson = "SELECT p.person_id, p.first_name, p.last_name FROM person p WHERE p.person_id = ? ";
+        System.out.println(sqlUpdate);
         try (
-                PreparedStatement ps = connection.prepareStatement(sql);
+                PreparedStatement ps = connection.prepareStatement(sqlUpdate);
+                PreparedStatement psPerson = connection.prepareStatement(findPerson);
         ) {
+            connection.setAutoCommit(false);
+
+            //TodoItem
             ps.setLong(6, todoItem.getId());
             ps.setString(1, todoItem.getTitle());
             ps.setString(2, todoItem.getDescription());
             ps.setDate(3, java.sql.Date.valueOf(todoItem.getDeadLine()));
             ps.setBoolean(4, todoItem.isDone());
-            ps.setObject(5, todoItem.getCreator());
-
+            ps.setInt(5, todoItem.getCreator().getId());
 
             int rowInserted = ps.executeUpdate();
+            connection.commit();
             if (rowInserted > 0) {
                 System.out.println("Updated successfully.");
                 return todoItem;
@@ -282,7 +288,6 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
                 System.out.println("No Todo Item found with ID: " + todoItem.getId());
                 return null;
             }
-
 
         } catch (SQLException e) {
             System.err.println("Connecting to DB Error: " + e.getMessage());
