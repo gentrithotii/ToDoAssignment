@@ -42,7 +42,7 @@ public class Main {
 //            System.out.println(todoItemDAO.findByAssignee(43));
 //            System.out.println(todoItemDAO.findByAssignee(new Person(43, "Paula", "Lee")));
 //            System.out.println(todoItemDAO.findByUnassignedTodoItems());
-            System.out.println(todoItemDAO.update(new TodoItem(115, "Clean the pc fans", "Importan to do it fast", LocalDate.of(2025,05, 20), false, new Person(501,"Test", "Testson"))));
+            System.out.println(todoItemDAO.update(new TodoItem(115, "Clean the pc fans", "Importan to do it fast", LocalDate.of(2025,05, 20), false, new Person(43, "Paula", "Lee"))));
         } catch (SQLException e) {
             System.err.println("Could not connect to server" + e.getMessage());
         }

@@ -272,12 +272,13 @@ public class TodoItemDAOCollection implements ITodoItemDAO {
             connection.setAutoCommit(false);
 
             //TodoItem
-            ps.setLong(6, todoItem.getId());
+            ps.setInt(6, todoItem.getId());
             ps.setString(1, todoItem.getTitle());
             ps.setString(2, todoItem.getDescription());
             ps.setDate(3, java.sql.Date.valueOf(todoItem.getDeadLine()));
             ps.setBoolean(4, todoItem.isDone());
-            ps.setInt(5, todoItem.getCreator().getId());
+
+            ps.setNull(5, Types.INTEGER);
 
             int rowInserted = ps.executeUpdate();
             connection.commit();
