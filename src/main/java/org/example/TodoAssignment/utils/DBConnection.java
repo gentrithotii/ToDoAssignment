@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 public class DBConnection {
     private static DBConnection instance;
-
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/todoit";
     private static final String USER = "root";
     private static final String PASSWORD = "1234";

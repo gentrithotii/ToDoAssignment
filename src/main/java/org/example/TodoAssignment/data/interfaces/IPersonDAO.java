@@ -16,4 +16,6 @@ public interface IPersonDAO {
     Person update(Person person);
 
     boolean deleteById(int id);
+
+    boolean testUpdateForCommit(Person person);
 }

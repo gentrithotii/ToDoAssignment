@@ -161,4 +161,36 @@ public class PersonDAOCollection implements IPersonDAO {
         }
         return false;
     }
+
+    @Override
+    public boolean testUpdateForCommit(Person p) {
+        String sqlFirstQuery = "UPDATE person p SET p.first_name = ? WHERE p.person_id = ? ";
+        String sqlSecondQuery = "UPDATE fs p SET p.last_name = ? WHERE p.person_id = ? ";
+
+        try (
+                PreparedStatement updateFirstName = connection.prepareStatement(sqlFirstQuery);
+                PreparedStatement updateLastName = connection.prepareStatement(sqlSecondQuery);
+        ) {
+            connection.setAutoCommit(false);
+            updateFirstName.setString(1, p.getFirstName());
+            updateFirstName.setInt(2, p.getId());
+
+            int firstNameUpdated = updateFirstName.executeUpdate();
+
+            updateLastName.setString(1, p.getLastName());
+            updateLastName.setInt(2, p.getId());
+
+            int lastNameUpdated = updateLastName.executeUpdate();
+
+            if (firstNameUpdated > 0 && lastNameUpdated > 0) {
+                System.out.println("Successful");
+            }
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Something went wrong updating");
+        }
+
+        return false;
+    }
 }

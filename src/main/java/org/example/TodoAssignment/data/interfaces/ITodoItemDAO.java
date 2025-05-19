@@ -25,5 +25,4 @@ public interface ITodoItemDAO {
 
     boolean deleteById(int id);
 
-
 }
