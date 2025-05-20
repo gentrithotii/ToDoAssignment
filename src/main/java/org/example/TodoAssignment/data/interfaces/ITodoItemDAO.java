@@ -6,12 +6,7 @@ import org.example.TodoAssignment.models.TodoItem;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ITodoItemDAO {
-    TodoItem create(TodoItem todoItem);
-
-    List<TodoItem> findAll();
-
-    TodoItem findById(int id);
+public interface ITodoItemDAO extends IDAO<TodoItem> {
 
     List<TodoItem> findByDoneStatus(boolean done);
 
@@ -20,9 +15,5 @@ public interface ITodoItemDAO {
     List<TodoItem> findByAssignee(Person person);
 
     List<TodoItem> findByUnassignedTodoItems();
-
-    TodoItem update(TodoItem todoItem);
-
-    boolean deleteById(int id);
 
 }

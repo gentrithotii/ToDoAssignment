@@ -4,18 +4,9 @@ import org.example.TodoAssignment.models.Person;
 
 import java.util.List;
 
-public interface IPersonDAO {
-    Person create(Person person);
-
-    List<Person> findAll();
-
-    Person findById(int id);
+public interface IPersonDAO extends IDAO<Person> {
 
     List<Person> findByName(String name);
-
-    Person update(Person person);
-
-    boolean deleteById(int id);
 
     boolean testUpdateForCommit(Person person);
 }
