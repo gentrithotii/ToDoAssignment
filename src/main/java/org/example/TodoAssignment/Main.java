@@ -8,9 +8,10 @@ import org.example.TodoAssignment.models.Person;
 import org.example.TodoAssignment.models.TodoItem;
 import org.example.TodoAssignment.seeddata.SeedData;
 import org.example.TodoAssignment.utils.DBConnection;
-
+import javax.mail.Session;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Properties;
 
 
 public class Main {
@@ -48,5 +49,6 @@ public class Main {
         } catch (SQLException e) {
             System.err.println("Could not connect to server" + e.getMessage());
         }
+
     }
 }
