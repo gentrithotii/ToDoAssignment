@@ -4,16 +4,19 @@ import org.example.TodoAssignment.data.interfaces.IPersonDAO;
 import org.example.TodoAssignment.models.Person;
 import org.example.TodoAssignment.utils.DBConnection;
 import org.junit.platform.commons.function.Try;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Component
 public class PersonDAOCollection implements IPersonDAO {
     private Connection connection;
 
-
+    @Autowired
     public PersonDAOCollection(Connection connection) {
         this.connection = connection;
     }

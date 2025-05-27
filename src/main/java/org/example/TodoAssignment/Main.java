@@ -1,5 +1,6 @@
 package org.example.TodoAssignment;
 
+import org.example.TodoAssignment.config.AppConfig;
 import org.example.TodoAssignment.data.AppUserDAOCollection;
 import org.example.TodoAssignment.data.PersonDAOCollection;
 import org.example.TodoAssignment.data.TodoItemDAOCollection;
@@ -8,6 +9,9 @@ import org.example.TodoAssignment.models.Person;
 import org.example.TodoAssignment.models.TodoItem;
 import org.example.TodoAssignment.seeddata.SeedData;
 import org.example.TodoAssignment.utils.DBConnection;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import javax.mail.Session;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -17,11 +21,10 @@ import java.util.Properties;
 public class Main {
     public static void main(String[] args) {
 
-        try {
-            PersonDAOCollection personDAO = new PersonDAOCollection(DBConnection.getInstance().getConnection());
-            AppUserDAOCollection userDAO = new AppUserDAOCollection();
-            TodoItemDAOCollection todoItemDAO = new TodoItemDAOCollection(DBConnection.getInstance().getConnection());
-            TodoItemTaskDAOCollection todoItemTaskDAO = new TodoItemTaskDAOCollection();
+        //            PersonDAOCollection personDAO = new PersonDAOCollection(DBConnection.getInstance().getConnection());
+//            AppUserDAOCollection userDAO = new AppUserDAOCollection();
+//            TodoItemDAOCollection todoItemDAO = new TodoItemDAOCollection(DBConnection.getInstance().getConnection());
+//            TodoItemTaskDAOCollection todoItemTaskDAO = new TodoItemTaskDAOCollection();
 
 //        SeedData.populate(personDAO, userDAO, todoItemDAO, todoItemTaskDAO);
 //        personDAO.create(new Person("Gentrit", "Hoti"));
@@ -44,11 +47,10 @@ public class Main {
 //            System.out.println(todoItemDAO.findByAssignee(new Person(43, "Paula", "Lee")));
 //            System.out.println(todoItemDAO.findByUnassignedTodoItems());
 //            System.out.println(todoItemDAO.update(new TodoItem(115, "Clean the pc fans", "Important to do it fast", LocalDate.of(2025,05, 20), false, new Person(43, "Paula", "Lee"))));
-            System.out.println(personDAO.testUpdateForCommit(new Person(201, "Genititisan", "Hotii")));
-
-        } catch (SQLException e) {
-            System.err.println("Could not connect to server" + e.getMessage());
-        }
+//            System.out.println(personDAO.testUpdateForCommit(new Person(201, "Genititisan", "Hotii")));
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        PersonDAOCollection pd = context.getBean(PersonDAOCollection.class);
+        System.out.println(pd.findAll());
 
     }
 }

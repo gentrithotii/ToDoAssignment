@@ -1,15 +1,17 @@
 package org.example.TodoAssignment.utils;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Component
 public class DBConnection {
+
     private static DBConnection instance;
     private String url;
     private String user;
@@ -26,6 +28,7 @@ public class DBConnection {
         }
     }
 
+//    @Bean
     public static synchronized DBConnection getInstance() {
         if (instance == null) {
             synchronized (DBConnection.class) {
@@ -47,7 +50,7 @@ public class DBConnection {
 //            throw new RuntimeException("Failed to load file", e);
 //        }
 //    }
-
+    @Bean
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, user, password);
     }
