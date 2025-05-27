@@ -1,4 +1,4 @@
-package org.example.TodoAssignment.data.interfaces;
+package org.example.TodoAssignment.data;
 
 import org.example.TodoAssignment.models.AppUser;
 
