@@ -1,21 +1,9 @@
 package org.example.TodoAssignment;
 
 import org.example.TodoAssignment.config.AppConfig;
-import org.example.TodoAssignment.data.AppUserDAOCollection;
-import org.example.TodoAssignment.data.PersonDAOCollection;
-import org.example.TodoAssignment.data.TodoItemDAOCollection;
-import org.example.TodoAssignment.data.TodoItemTaskDAOCollection;
-import org.example.TodoAssignment.models.Person;
-import org.example.TodoAssignment.models.TodoItem;
-import org.example.TodoAssignment.seeddata.SeedData;
-import org.example.TodoAssignment.utils.DBConnection;
+import org.example.TodoAssignment.data.impl.PersonDAOImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import javax.mail.Session;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.Properties;
 
 
 public class Main {
@@ -49,7 +37,7 @@ public class Main {
 //            System.out.println(todoItemDAO.update(new TodoItem(115, "Clean the pc fans", "Important to do it fast", LocalDate.of(2025,05, 20), false, new Person(43, "Paula", "Lee"))));
 //            System.out.println(personDAO.testUpdateForCommit(new Person(201, "Genititisan", "Hotii")));
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        PersonDAOCollection pd = context.getBean(PersonDAOCollection.class);
+        PersonDAOImpl pd = context.getBean(PersonDAOImpl.class);
         System.out.println(pd.findAll());
 
     }

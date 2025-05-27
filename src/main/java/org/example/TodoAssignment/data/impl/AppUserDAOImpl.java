@@ -1,15 +1,15 @@
-package org.example.TodoAssignment.data;
+package org.example.TodoAssignment.data.impl;
 
-import org.example.TodoAssignment.data.interfaces.IAppUserDAO;
+import org.example.TodoAssignment.data.IAppUserDAO;
 import org.example.TodoAssignment.models.AppUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppUserDAOCollection implements IAppUserDAO {
+public class AppUserDAOImpl implements IAppUserDAO {
     private final List<AppUser> appUserList;
 
-    public AppUserDAOCollection() {
+    public AppUserDAOImpl() {
         this.appUserList = new ArrayList<>();
     }
 

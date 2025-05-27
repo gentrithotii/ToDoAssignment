@@ -1,9 +1,7 @@
-package org.example.TodoAssignment.data;
+package org.example.TodoAssignment.data.impl;
 
-import org.example.TodoAssignment.data.interfaces.IPersonDAO;
+import org.example.TodoAssignment.data.IPersonDAO;
 import org.example.TodoAssignment.models.Person;
-import org.example.TodoAssignment.utils.DBConnection;
-import org.junit.platform.commons.function.Try;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +11,11 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class PersonDAOCollection implements IPersonDAO {
+public class PersonDAOImpl implements IPersonDAO {
     private Connection connection;
 
     @Autowired
-    public PersonDAOCollection(Connection connection) {
+    public PersonDAOImpl(Connection connection) {
         this.connection = connection;
     }
 

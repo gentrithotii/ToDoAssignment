@@ -1,15 +1,15 @@
-package org.example.TodoAssignment.data;
+package org.example.TodoAssignment.data.impl;
 
-import org.example.TodoAssignment.data.interfaces.ITodoItemTaskDAO;
+import org.example.TodoAssignment.data.ITodoItemTaskDAO;
 import org.example.TodoAssignment.models.TodoItemTask;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodoItemTaskDAOCollection implements ITodoItemTaskDAO {
+public class TodoItemTaskDAOImpl implements ITodoItemTaskDAO {
     private final List<TodoItemTask> todoItemTaskList;
 
-    public TodoItemTaskDAOCollection() {
+    public TodoItemTaskDAOImpl() {
         this.todoItemTaskList = new ArrayList<>();
     }
 

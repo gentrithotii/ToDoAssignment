@@ -1,9 +1,9 @@
 package org.example.TodoAssignment.seeddata;
 
-import org.example.TodoAssignment.data.AppUserDAOCollection;
-import org.example.TodoAssignment.data.PersonDAOCollection;
-import org.example.TodoAssignment.data.TodoItemDAOCollection;
-import org.example.TodoAssignment.data.TodoItemTaskDAOCollection;
+import org.example.TodoAssignment.data.impl.AppUserDAOImpl;
+import org.example.TodoAssignment.data.impl.PersonDAOImpl;
+import org.example.TodoAssignment.data.impl.TodoItemDAOImpl;
+import org.example.TodoAssignment.data.impl.TodoItemTaskDAOImpl;
 import org.example.TodoAssignment.models.*;
 import org.example.TodoAssignment.models.user.AppRole;
 
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 public class SeedData {
 
-    public static void populate(PersonDAOCollection personDAO, AppUserDAOCollection userDAO, TodoItemDAOCollection itemDAO, TodoItemTaskDAOCollection taskDAO) {
+    public static void populate(PersonDAOImpl personDAO, AppUserDAOImpl userDAO, TodoItemDAOImpl itemDAO, TodoItemTaskDAOImpl taskDAO) {
 
         // AppUsers
         AppUser user1 = userDAO.persist(new AppUser("alice123", "passAlice", AppRole.ROLE_APP_USER));

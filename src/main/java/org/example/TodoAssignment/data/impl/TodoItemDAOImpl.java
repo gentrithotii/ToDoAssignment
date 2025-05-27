@@ -1,9 +1,8 @@
-package org.example.TodoAssignment.data;
+package org.example.TodoAssignment.data.impl;
 
-import org.example.TodoAssignment.data.interfaces.ITodoItemDAO;
+import org.example.TodoAssignment.data.ITodoItemDAO;
 import org.example.TodoAssignment.models.Person;
 import org.example.TodoAssignment.models.TodoItem;
-import org.example.TodoAssignment.models.TodoItemTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,15 +11,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
-public class TodoItemDAOCollection implements ITodoItemDAO {
+public class TodoItemDAOImpl implements ITodoItemDAO {
     private Connection connection;
 
     @Autowired
-    public TodoItemDAOCollection(Connection connection) {
+    public TodoItemDAOImpl(Connection connection) {
         this.connection = connection;
     }
 
